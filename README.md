@@ -3,7 +3,7 @@ Vehicle was a fundamental tool of transportation. However, according to the NHTS
 
 ## Approach
 To solve the problems mentioned above, we proposed a situation assessment based collision avoidance decision-making framework, which was adaptive to multi-scenario to help the reduction of traffic accidents. Firstly, a probabilistic-model based situation assessment module using conditional random field (CRF), which considered both safety metrics and evasive ability for collision, was proposed to assess the risk of surrounding vehicles. Then, a collision avoidance strategy with different consumer preference was proposed to meet different consumer demand for driving comfort. Finally, we validated our algorithm in a simulator, called Carla. The whole framework was shown below:
-<div align=center><img src="picture/CA_strategy.png"></div>
+<div align=center><img src="picture/CA_strategy.png" width="300"></div>
 
 ## Experiments
 three crash scenarios respectively called Straight crossing path (SCP), leading vehicle at lower speed (LVLS) and immediate lane change maneuver (ILCM) were introduced here to validate the proposed strategy, see following figture:
