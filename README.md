@@ -17,7 +17,14 @@ The results were shown following, showing different featrues when compared with 
 <div align=center><img src="picture/conservative_results.png"></div>
 
 ## Animation visualization
-An animation of SCP was shown following, from left to right were aggressive preference and conservative preference:  
+Some animations were shown following:
+### SCP Scenario (from left to right were aggressive preference and conservative preference)
 ![aggressive preference](picture/gifs/scenario-1/aggressive.gif)
-![conservative preference](picture/gifs/scenario-1/conservative.gif) 
+![conservative preference](picture/gifs/scenario-1/conservative.gif)
+### LVLS Scenario (from left to right were aggressive preference and conservative preference)
+![aggressive preference](picture/gifs/scenario-1/strategy_1-20200316200332.gif)
+![conservative preference](picture/gifs/scenario-1/strategy_3-20200316200605.gif)
+### ILCM Scenario (from left to right were aggressive preference and conservative preference)
+![aggressive preference](picture/gifs/scenario-1/strategy_1-20200316202811.gif)
+![conservative preference](picture/gifs/scenario-1/strategy_3-20200316202844.gif) 
 
