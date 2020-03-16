@@ -40,6 +40,7 @@ save_experiment_data = False
 strategy_type = STRATEGY.CONSERVATIVE
 experiment_name = experiment_name_map[strategy_type]
 save_experiment_data_to = './experiment_results/' + experiment_name + '/' + experiment_name + '-' + str(now) + '.pickle'
+save_experiment_video_to = './experiment_results/' + experiment_name + '/' + experiment_name + '-' + str(now) + '.avi'
 ########## ------- collision avoidance settings ------ #####
 
 def get_host(world):
@@ -408,7 +409,7 @@ def control_host(host_vehicle):
         val = k_p*error + k_d*d_error + k_i*error_sum
 
         return max(min(val, 1.), -1.), error, error_sum
-
+    global stop
     last_error_pdcc = 0.
     error_sum_pdcc = 0.
     last_error_pdcs = 0.
@@ -459,15 +460,15 @@ def control_host(host_vehicle):
         ego_v_state = ego_v.ego_vehicle()
         ego_v_state.set_position(position=(pos.x, pos.y, pos.z))
         ego_v_state.set_linear(linear=(velocity.x, velocity.y, velocity.z))
-        ego_v_state.set_size(size=(1.6, 1.6, 3.2))
+        ego_v_state.set_size(size=(2.5, 1.6, 1.6))
 
         road_obj_state = road_o.road_obj()
         road_obj_state.set_position(position=(other_pos.x, other_pos.y, other_pos.z))
         road_obj_state.set_linear(linear=(other_velocity.x, other_velocity.y, other_velocity.z))
-        road_obj_state.set_size(size=(1.6, 1.6, 3.2))
-        score = _assess_one_obj_threat_score(ego_v_state, road_obj_state)
+        road_obj_state.set_size(size=(2.5, 1.6, 1.6))
+        score, ttc_test = _assess_one_obj_threat_score(ego_v_state, road_obj_state)
         degree = _score_2_threat_degree(score)
-        # print(str(score) + '---'+str(degree))
+        print(str(score) + '---'+str(degree))
         if time_step >= record_start_step:
             thread_record_d.append([time_step - record_start_step, score[0]])
             thread_record_a.append([time_step - record_start_step, score[1]])
@@ -482,8 +483,8 @@ def control_host(host_vehicle):
         if emergency_control:
             # ## strategy-1 : emergency braking
             if strategy_type == STRATEGY.AGGRESSIVE:
-                if degree == safety_degree.dangerous and score[0] >= 0.8:
-                    # print('brake!!')
+                if degree == safety_degree.dangerous and score[0] >= 0.5:
+                    print('brake!!')
                     control = carla.VehicleControl(brake=1.)
                     host_vehicle.apply_control(control)
                 elif degree == safety_degree.safe and score[2] >= 0.9:
@@ -499,7 +500,7 @@ def control_host(host_vehicle):
                 val, last_error_pdcs, error_sum_pdcs = pd_control_for_safety(score[2], 0.8, last_error_pdcs,
                                                                              error_sum_pdcs, kp=0.1, kd=0.1, ki=0.)
                 if val >= 0:
-                    print(val)
+                    # print(val)
                     control = carla.VehicleControl(brake=val/10.)
                 else:
                     control = carla.VehicleControl(throttle=0.3)
@@ -517,14 +518,15 @@ def control_host(host_vehicle):
 
             host_vehicle.apply_control(control)
 
-        if pos.x > 60:
+        if pos.x > 55:
             logger.info('Stop test...')
+            stop = True
             break
 
         ## transform the control state
         ## for strategy-1
         if strategy_type == STRATEGY.AGGRESSIVE:
-            if collision_avoidance and degree == safety_degree.dangerous and score[0] >= 0.8:
+            if collision_avoidance and degree == safety_degree.dangerous and score[0] >= 0.5:
                 pd_control = False
                 emergency_control = True
 
@@ -590,11 +592,10 @@ def control_host(host_vehicle):
         time.sleep(0.05)
         time_step += 1
 
-    plot_threat_curve(thread_record_d, thread_record_a, thread_record_s)
-    plot_vel_acc_rdis(vel_record, acc_record, relative_distance_record)
-    plot_comfort_curve(comfort_record_m, comfort_record_a, comfort_record_c)
-
     if save_experiment_data:
+        plot_threat_curve(thread_record_d, thread_record_a, thread_record_s)
+        plot_vel_acc_rdis(vel_record, acc_record, relative_distance_record)
+        plot_comfort_curve(comfort_record_m, comfort_record_a, comfort_record_c)
         save_dict = {'experiment_name': experiment_name,
                      'thread_record_d': thread_record_d,
                      'thread_record_a': thread_record_a,
@@ -648,6 +649,9 @@ def control_other(other_vehicle):
 
 
 if __name__ == '__main__':
+    import cv2
+    from carla_utils.sensor_ops import bgr_camera
+
     #### carla world init ####
     client = carla.Client('127.0.0.1', 2000)
     client.set_timeout(10.0)  # seconds
@@ -658,14 +662,16 @@ if __name__ == '__main__':
 
     destroy_all_actors(world)
 
+    stop = False
+
     ## vehicle blueprint
-    blueprints = world.get_blueprint_library().filter('vehicle.nissan.micra')
+    blueprints = world.get_blueprint_library().filter('*tesla')
     blueprints = [x for x in blueprints if int(x.get_attribute('number_of_wheels')) == 4]
 
     ## host vehicle settings
     host_vehicle_bp = random.choice(blueprints)
     if host_vehicle_bp.has_attribute('color'):
-        color = random.choice(host_vehicle_bp.get_attribute('color').recommended_values)
+        color = host_vehicle_bp.get_attribute('color').recommended_values[0]
         host_vehicle_bp.set_attribute('color', color)
         host_vehicle_bp.set_attribute('role_name', 'host_vehicle')
     transform = carla.Transform(carla.Location(x=config.host_vehicle_init_pos_2[0], y=config.host_vehicle_init_pos_2[1], z=1.8), carla.Rotation(pitch=0., yaw=0., roll=0.))
@@ -674,19 +680,43 @@ if __name__ == '__main__':
     ## other vehicle settings
     other_vehicle_bp = random.choice(blueprints)
     if other_vehicle_bp.has_attribute('color'):
-        color = random.choice(other_vehicle_bp.get_attribute('color').recommended_values)
+        color = other_vehicle_bp.get_attribute('color').recommended_values[1]
         other_vehicle_bp.set_attribute('color', color)
         other_vehicle_bp.set_attribute('role_name', 'other_vehicle')
     transform = carla.Transform(carla.Location(x=config.host_vehicle_init_pos_2[0]+50, y=config.host_vehicle_init_pos_2[1], z=1.8),
                                 carla.Rotation(pitch=0., yaw=0., roll=0.))
     try_spawn_at(world, other_vehicle_bp, transform, autopilot=False)
 
+    camera_config = {'data_type': 'sensor.camera.rgb', 'image_size_x': 600,
+                     'image_size_y': 400, 'fov': 110, 'sensor_tick': 0.02,
+                     'transform': carla.Transform(carla.Location(x=-0., y=-0.4, z=1.25)),
+                     'attach_to': get_host(world)}
+
+    camera = bgr_camera(world, camera_config)
+
     time.sleep(1)   ## waiting carla synchronous
 
-    # control_host_t = threading.Thread(target=control_host, args=(get_host(world),))
-    # control_other_t = threading.Thread(target=control_other, args=(get_other(world),))
-    # control_host_t.start()
-    # control_other_t.start()
-    #
-    # while True:
-    #     pass
+    control_host_t = threading.Thread(target=control_host, args=(get_host(world),))
+    control_other_t = threading.Thread(target=control_other, args=(get_other(world),))
+    control_host_t.start()
+    control_other_t.start()
+
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    VideoWriter = cv2.VideoWriter(save_experiment_video_to, fourcc, 25, (600, 400))
+
+    while True:
+        bgr = camera.get()
+        #
+        # cv2.imshow('test', bgr)
+        # cv2.waitKey(1)
+        #
+        VideoWriter.write(bgr)
+        time.sleep(1. / 25.)
+
+        if stop:
+            destroy_all_actors(world)
+            cv2.destroyAllWindows()
+            break
+        pass
+
+        pass
