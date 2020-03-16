@@ -18,6 +18,5 @@ The results were shown following, showing different featrues when compared with 
 
 ## Animation visualization
 An animation of SCP was shown following:
-![aggressive preference](picture/gifs/scenario-1/aggressive.gif)
-![conservative preference](picture/gifs/scenario-1/conservative.gif) 
+![aggressive preference](picture/gifs/scenario-1/aggressive.gif) ![conservative preference](picture/gifs/scenario-1/conservative.gif) 
 
