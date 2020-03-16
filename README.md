@@ -22,9 +22,9 @@ Some animations were shown following:
 ![aggressive preference](picture/gifs/scenario-1/aggressive.gif)
 ![conservative preference](picture/gifs/scenario-1/conservative.gif)
 ### LVLS Scenario (from left to right were aggressive preference and conservative preference)
-![aggressive preference](picture/gifs/scenario-1/strategy_1-20200316200332.gif)
-![conservative preference](picture/gifs/scenario-1/strategy_3-20200316200605.gif)
+![aggressive preference](picture/gifs/scenario-2/strategy_1-20200316200332.gif)
+![conservative preference](picture/gifs/scenario-2/strategy_3-20200316200605.gif)
 ### ILCM Scenario (from left to right were aggressive preference and conservative preference)
-![aggressive preference](picture/gifs/scenario-1/strategy_1-20200316202811.gif)
-![conservative preference](picture/gifs/scenario-1/strategy_3-20200316202844.gif) 
+![aggressive preference](picture/gifs/scenario-3/strategy_1-20200316202811.gif)
+![conservative preference](picture/gifs/scenario-3/strategy_3-20200316202844.gif) 
 
