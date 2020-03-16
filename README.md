@@ -1,5 +1,5 @@
 # Collision avoidance strategy for AVs with differnet consumer preference
-Vehicle was a fundamental tool of transportation. However, according to the NHTSA report, there were 52,645 fatal crashes and more than 3 million injury crashes involving to the vehicles, most of which were caused by the driver mistakes due to the complex traffic environment. Thus, an advanced safeguarding decision-making system for vehicle to replace the human decisions at the dangerous situation (e.g. potential collision) to avoid the crash is necessary. Besides, with the improvement of passenger demand for vehicle driving quality, we should pay more attention to the passenger comfort. Therefore, a more robustly comprehensive collision avoidance (CA) system should be proposed to meet the demand for passenger (or driver) with different preference (e.g. aggressive or conservative).
+Vehicle was a fundamental tool of transportation. However, according to the NHTSA report, there were 52,645 fatal crashes and more than 3 million injury crashes involving to the vehicles, most of which were caused by the driver mistakes due to the complex traffic environment. Thus, an advanced safeguarding decision-making system for vehicle to replace the human decisions at the dangerous situation (e.g. potential collision) to avoid the crash is necessary. Besides, with the improvement of passenger demand for vehicle driving quality, we should pay more attention to the passenger comfort. Therefore, a more robustly comprehensive collision avoidance (CA) system should be proposed to meet the demand for passenger (or driver) with different preferences (e.g. aggressive, normal or conservative).
 
 ## Approach
 To solve the problems mentioned above, we proposed a situation assessment based collision avoidance decision-making framework, which was adaptive to multi-scenario to help the reduction of traffic accidents. Firstly, a probabilistic-model based situation assessment module using conditional random field (CRF), which considered both safety metrics and evasive ability for collision, was proposed to assess the risk of surrounding vehicles. Then, a collision avoidance strategy with different consumer preference was proposed to meet different consumer demand for driving comfort. Finally, we validated our algorithm in a simulator, called Carla.
@@ -15,6 +15,10 @@ The experiment recorded some kinematics and risk assessment results of host-vehi
 ## Results with consevative preference
 The results were shown following, showing different featrues when compared with the aggressive one.
 <div align=center><img src="picture/conservative_results.png"></div>
+
+## Comparison of different preferences
+Using the normal preference as a baseline, we recorded some metrics which denoted the features of different preferences (i.e. the time-to-collision (TTC) when the CA strategy took over the host-vehicle, the minimum relative distance during experiment and the maximum deceleration taken by the CA strategy)
+<div align=center><img src="picture/table.png"></div>
 
 ## Animation visualization
 Some animations were shown following:
