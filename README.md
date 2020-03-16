@@ -11,5 +11,12 @@ three crash scenarios respectively called Straight crossing path (SCP), leading 
 ## Results with aggressive preference
 The experiment recorded some kinematics and risk assessment results of host-vehicle, which were shown following, we could see that the CA strategy tended to take-over the vehicle in a moment of near-collision:
 <div align=center><img src="picture/aggressive_results.png"></div>
+
+## Results with consevative preference
+The results were shown following, showing different featrues when compared with the aggressive one.
+<div align=center><img src="picture/conservative_results.png"></div>
+
+## Animation visualization
 An animation of SCP was shown following:
 <div align=left><img src="picture/gifs/scenario-1/aggressive.gif"></div>
+<div align=left><img src="picture/gifs/scenario-1/conservative.gif"></div>
