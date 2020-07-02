@@ -19,7 +19,7 @@ The results were shown following, showing different featrues when compared with 
 
 ## Comparison of different preferences
 Using the normal preference as a baseline, we recorded some metrics which denoted the features of different preferences (i.e. the time-to-collision (TTC) when the CA strategy took over the host-vehicle, the minimum relative distance during experiment and the maximum deceleration taken by the CA strategy)
-<div align=center><img width="600" height="400" src="picture/table.png"></div>
+<div align=center><img width="600" height="300" src="picture/table.png"></div>
 
 ## Animation visualization
 Some animations were shown following:
