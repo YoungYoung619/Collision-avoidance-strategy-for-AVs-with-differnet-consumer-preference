@@ -7,7 +7,7 @@ To solve the problems mentioned above, we proposed a situation assessment based 
 
 ## Experiments
 three crash scenarios respectively called Straight crossing path (SCP), leading vehicle at lower speed (LVLS) and immediate lane change maneuver (ILCM) were introduced here to validate the proposed strategy, see following figture:
-<div align=center><img src="picture/scenario_setting.png"></div>
+<div align=center><img width="300" height="600" src="picture/scenario_setting.png"></div>
 
 ## Results with aggressive preference
 The experiment recorded some kinematics and risk assessment results of host-vehicle, which were shown following, we could see that the CA strategy tended to take-over the vehicle in a moment of near-collision:
